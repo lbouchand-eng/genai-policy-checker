@@ -1,0 +1,40 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data files
+compliance_report_*.pdf
+evaluation_results_*.csv
+evaluation_summary_*.txt
+
+# Output directory (generated reports)
+output/*.pdf
+output/*.csv
+output/*.txt
+# Keep output directory but ignore its contents
+!output/.gitkeep
+
+# Vector database (optional - uncomment if you don't want to commit it)
+# chroma_eu_laws/
+
+# Chunks file (optional - uncomment if you don't want to commit it)
+# eu_laws_chunks.jsonl
+

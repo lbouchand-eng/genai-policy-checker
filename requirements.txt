@@ -4,5 +4,11 @@ chromadb
 reportlab
 langchain-openai
 langchain-chroma
-langchain-schema
+langchain-text-splitters
 markdown
+pypdf2
+python-docx
+chainlit
+pdfplumber
+tqdm
+python-dotenv

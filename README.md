@@ -1,138 +1,212 @@
-# 🧠 EU Policy Compliance Checker (GenAI Final Project)
+# EU Policy Compliance Checker
 
-An intelligent **Regulatory Compliance Assistant** that analyzes projects, company policies, or legal questions related to **European law, GDPR, AI Act, and NIS2**, and generates:
-- ✅ A **concise legal answer** directly in the chat  
-- 🧾 A **detailed compliance report** in PDF format  
-  (including compliance score, risk analysis, and actionable steps)
+An intelligent Regulatory Compliance Assistant that compares internal documents (policies/procedures) against public regulations (GDPR, AI Act, NIS2, etc.) and flags discrepancies with cited articles.
 
----
+## Key Features
 
-## 🚀 Features
+- **Document Upload & Comparison**: Upload PDF, DOCX, or TXT files to compare against EU regulations
+- **Discrepancy Detection**: Automatically identifies compliance gaps and violations
+- **Article Citations**: Flags discrepancies with specific regulatory article references
+- **Question-Answering**: Ask legal questions about EU regulations
+- **Detailed PDF Reports**: Generate comprehensive compliance reports with:
+  - Identified discrepancies with regulatory violations
+  - Compliance scores
+  - Actionable recommendations
+  - Regulatory article references
 
-- **Retrieval-Augmented Generation (RAG)** with `Chroma` and `OpenAI Embeddings`
-- **Automatic PDF report generator** (formatted and structured)
-- **Interactive chatbot** built with [Chainlit](https://docs.chainlit.io/)
-- **Dual-level intelligence**:
+## Features
+
+- **Document Upload & Parsing**: Support for PDF, DOCX, and TXT files
+- **Retrieval-Augmented Generation (RAG)** with Chroma and OpenAI Embeddings
+- **Intelligent Document Comparison**: Compares internal policies against EU regulations
+- **Structured Discrepancy Extraction**: Uses data models for consistent reporting
+- **Automatic PDF Report Generator**: Formatted and structured reports
+- **Interactive Chatbot**: Built with Chainlit
+- **Dual-level Intelligence**:
   - Short in-chat response for fast understanding
-  - Full structured PDF with executive summary, compliance score, and next steps
-- **Dynamic prompt logic**: no score is generated for general questions, only for detailed policy/project evaluations
+  - Full structured PDF with discrepancies, compliance score, and next steps
+- **Enhanced Retrieval**: Uses more regulatory context (8 documents) for thorough document analysis
 
----
+## Architecture Overview
 
-## 🧩 Architecture Overview
-
+```
 User <--> Chainlit Chat UI
-
-↕
-
+         ↕
 ChatOpenAI (gpt-4o-mini)
-
-↕
-
+         ↕
 Retriever (Chroma + OpenAI embeddings)
-
-↕
-
+         ↕
 Pre-processed EU Regulation Texts (PDF → Chunks)
-
-↕
-
-Report Generator (Markdown → PDF)
+         ↕
+Report Generator (Structured Data → PDF)
+```
 
 - Data: stored in `chroma_eu_laws/`
 - Reports: generated dynamically on user queries
 - Vector embeddings: `text-embedding-3-small`
 
----
+## Installation
 
-## ⚙️ Installation
+### 1. Clone & Setup Environment
 
-### 1️⃣ Clone & setup environment
 ```bash
 git clone <your_repo_url>
-cd "Final project AI"
+cd genai_final_project_leo_benjo
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\activate  # Windows
+# or: source venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
 ```
 
-### 2️⃣ Add your OpenAI API Key
+### 2. Add Your OpenAI API Key
 
-In app.py, set:
+Create a `.env` file in the project root (copy from `.env.example`):
 
-os.environ["OPENAI_API_KEY"] = "sk-xxxx..."
+```bash
+cp .env.example .env
+# Then edit .env and add your OpenAI API key
+```
 
-### 3️⃣ Run the app locally
+Or create it manually:
+```
+OPENAI_API_KEY=sk-xxxx...
+```
+
+Alternatively, the application will prompt for the API key if not found in the environment.
+
+### 3. Setup the Vector Database (First Time Only)
+
+```bash
+# Process regulation PDFs into chunks
+python scripts/chunk_regulations.py
+
+# Create the vector store
+python scripts/create_vectorstore.py
+```
+
+### 4. Run the Application
+
+```bash
 chainlit run app.py -w
+```
 
-## 🧠 How It Works
+## How It Works
 
-1. User enters a legal question or uploads policy content.
+### Document Comparison Mode
 
-2. The app retrieves relevant EU legal texts using ChromaDB.
+1. User uploads a policy/procedure document (PDF, DOCX, or TXT)
+2. The app extracts text from the document
+3. Relevant EU regulations are retrieved using semantic search (ChromaDB)
+4. GPT-4o-mini compares the document against regulations using structured JSON output
+5. Discrepancies are identified with regulatory violations
+6. A detailed PDF report is generated in the `output/` directory with:
+   - List of discrepancies with regulatory violations
+   - Compliance score
+   - Actionable recommendations
 
-3. GPT-4o-mini analyzes and synthesizes the legal context.
+### Question-Answering Mode
 
-4. The chatbot provides a short answer.
+1. User enters a legal question about EU regulations
+2. The app retrieves relevant EU legal texts using ChromaDB
+3. GPT-4o-mini analyzes and synthesizes the legal context
+4. The chatbot provides a short answer with sources
 
-5. A full compliance report is generated (PDF).
+## Evaluation
 
-## 📊 Evaluation Phase
-
-A dedicated evaluation.ipynb notebook is provided to:
+A dedicated `notebooks/evaluation.ipynb` notebook is provided to:
 
 - Test the RAG pipeline across various queries
-
 - Compare GPT answers vs expected legal interpretations
-
 - Store results in a CSV for performance analysis
 
-## 📂 Project Structure
-📦 Final project AI
-├── app.py                        # Chainlit main app
-├── report_generator.py           # PDF generator
-├── chunking.ipynb                # PDF → text chunks
-├── embedding_and_vector.ipynb    # Embedding creation + ChromaDB
-├── rag.ipynb                     # RAG logic development
-├── evaluation.ipynb              # Model performance analysis
-├── eu_laws_chunks.jsonl          # Text chunks
-├── chroma_eu_laws/               # Vector database
-├── chainlit.md                   # Optional Chainlit config
-└── requirements.txt
+## Project Structure
 
-## 🧪 Example Query
+```
+genai_final_project_leo_benjo/
+├── app.py                        # Chainlit main application
+├── src/                          # Production code modules
+│   ├── __init__.py
+│   ├── config.py                # Centralized configuration
+│   ├── rag.py                   # RAG pipeline implementation
+│   ├── document_parser.py       # Document text extraction (PDF, DOCX, TXT)
+│   ├── report_generator.py      # PDF report generation
+│   ├── models.py                # Data models for compliance analysis
+│   ├── citation_validator.py    # Citation extraction and validation
+│   ├── discrepancy_parser.py   # Structured discrepancy parsing
+│   └── exceptions.py            # Custom exception classes
+├── scripts/                      # Utility scripts
+│   ├── chunk_regulations.py     # Process PDFs into chunks
+│   └── create_vectorstore.py    # Create vector database
+├── notebooks/                    # Jupyter notebooks for exploration
+│   ├── chunking.ipynb           # PDF chunking exploration
+│   ├── embedding_and_vector.ipynb  # Vector store creation exploration
+│   ├── rag.ipynb                # RAG pipeline development
+│   └── evaluation.ipynb         # Model evaluation and testing
+├── data/                         # Data directory
+├── output/                       # Generated compliance reports (PDFs)
+├── regulations_texts/            # Source EU regulation PDFs
+├── chroma_eu_laws/              # Vector database (generated)
+├── eu_laws_chunks.jsonl         # Text chunks (generated)
+├── chainlit.md                   # Chainlit configuration
+├── requirements.txt             # Python dependencies
+├── .env.example                 # Environment variables template
+└── .env                         # Environment variables (not in git, create from .env.example)
+```
 
-Question:
+## Example Usage
 
-    Can I store photos of employees for internal authentication?
+### Example 1: Document Upload
 
-Chat Answer:
+1. Upload your company's privacy policy (PDF/DOCX)
+2. The system compares it against GDPR, AI Act, and other relevant regulations
+3. Receive a report with:
+   - **Discrepancy 1**: Missing data retention period
+     - **Regulatory Violation**: GDPR Article 5(1)(e)
+     - **Required Action**: Specify retention periods for each data category
 
-    Yes, you can store photos of employees for internal authentication under GDPR, but you must adhere to specific legal requirements: ...
+### Example 2: Question-Answering
 
-📄 Full PDF report generated with compliance score, risk breakdown, and next steps.
+**Question:**
+> Can I store photos of employees for internal authentication?
 
-## 🛠️ Technologies
+**Chat Answer:**
+> Yes, you can store photos of employees for internal authentication under GDPR, but you must adhere to specific legal requirements: ...
 
-**Component**	**Library**
-Vector DB	Chroma
-Embeddings	OpenAI text-embedding-3-small
-LLM	ChatOpenAI (gpt-4o-mini)
-Interface	Chainlit
-PDF Generator	ReportLab
-Data	Official EU Regulation Texts (GDPR, AI Act, etc.)
+The answer includes sources from the retrieved regulatory documents.
 
-## 📈 Future Improvements
+## Technologies
+
+| Component | Library |
+|-----------|---------|
+| Vector DB | Chroma |
+| Embeddings | OpenAI text-embedding-3-small |
+| LLM | ChatOpenAI (gpt-4o-mini) |
+| Interface | Chainlit |
+| PDF Generator | ReportLab |
+| Document Parser | PyPDF2, python-docx |
+| Data | Official EU Regulation Texts (GDPR, AI Act, etc.) |
+
+## Implemented Features
+
+- Document upload for company policies (PDF, DOCX, TXT)
+- Automatic discrepancy detection
+- Regulatory violation identification in discrepancy reports
+- Structured discrepancy data models
+- Enhanced retrieval for document comparison
+- Professional logging and error handling
+- Structured JSON output from LLM
+
+## Future Improvements
 
 - Add multilingual support (FR/EN)
-
-- Integrate document upload for company policies
-
 - Add database of local EU Data Protection Authorities
-
 - Fine-tune model on compliance language
+- Support for batch document processing
+- Integration with document management systems
+- Enhanced citation matching algorithms
 
+## Authors
 
+Léo Bouchand, Benjamin Rasson
 
-Authors: Léo Bouchand, Benjamin Rasson
-🎓 Academic Project — Applied AI & Data Science 2025
+Academic Project — Applied AI & Data Science 2025
