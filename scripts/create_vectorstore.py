@@ -1,7 +1,6 @@
 """
 Script to create the Chroma vector store from chunked regulations.
 
-Extracted from embedding_and_vector.ipynb for production use.
 """
 import os
 import json
