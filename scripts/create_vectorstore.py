@@ -1,6 +1,5 @@
 """
 Script to create the Chroma vector store from chunked regulations.
-
 """
 import os
 import json

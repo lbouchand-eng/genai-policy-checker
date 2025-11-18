@@ -1,7 +1,5 @@
 """
 Script to chunk EU regulation PDFs into structured text chunks.
-
-Extracted from chunking.ipynb for production use.
 """
 import os
 import re

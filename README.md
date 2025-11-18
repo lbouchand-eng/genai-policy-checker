@@ -122,7 +122,7 @@ A dedicated `notebooks/evaluation.ipynb` notebook is provided to:
 ## Project Structure
 
 ```
-genai_final_project_leo_benjo/
+genai-policy-checker/
 ├── app.py                        # Chainlit main application
 ├── src/                          # Production code modules
 │   ├── __init__.py
@@ -137,11 +137,6 @@ genai_final_project_leo_benjo/
 ├── scripts/                      # Utility scripts
 │   ├── chunk_regulations.py     # Process PDFs into chunks
 │   └── create_vectorstore.py    # Create vector database
-├── notebooks/                    # Jupyter notebooks for exploration
-│   ├── chunking.ipynb           # PDF chunking exploration
-│   ├── embedding_and_vector.ipynb  # Vector store creation exploration
-│   ├── rag.ipynb                # RAG pipeline development
-│   └── evaluation.ipynb         # Model evaluation and testing
 ├── data/                         # Data directory
 ├── output/                       # Generated compliance reports (PDFs)
 ├── regulations_texts/            # Source EU regulation PDFs
