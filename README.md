@@ -51,7 +51,7 @@ Report Generator (Structured Data → PDF)
 
 ```bash
 git clone <your_repo_url>
-cd genai_final_project_leo_benjo
+cd genai-policy-checker
 python -m venv venv
 venv\Scripts\activate  # Windows
 # or: source venv/bin/activate  # Linux/Mac
@@ -205,3 +205,4 @@ The answer includes sources from the retrieved regulatory documents.
 Léo Bouchand, Benjamin Rasson
 
 Academic Project — Applied AI & Data Science 2025
+
